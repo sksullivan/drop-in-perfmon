@@ -1,0 +1,73 @@
+
+
+@font-face {
+    font-family: "Overwatch-Italic";
+    src: url("./bignoodletoo.woff") format('woff');
+}
+
+@font-face {
+    font-family: "Overwatch-Regular";
+    src: url("./koverwatch.ttf") format('truetype');
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    width: 96%;
+    margin: 35px;
+}
+.chart {
+    width: 100%;
+    height: 355px;
+}
+.right {
+    margin-top: 115px;
+    float: right;
+    margin-right: 66px;
+}
+
+#mem-graph {
+    position: relative;
+    top: 39px;
+}
+h1,h3 {
+    font-family: "Overwatch-Italic";
+    color: black;
+}
+
+table,.chart {
+    overflow-y: scroll;
+    padding: 12px;
+    box-shadow: 4px 4px 0px 0px rgba(0,0,0,0.7);
+    background: rgba(1,1,1,0.1);
+    font-family: "Overwatch-Regular";
+    font-size: 24px;
+    display: block;
+}
+table {
+    background: rgba(1,1,1,0.1);
+    height: 775px;
+}
+
+h3 {
+    font-family: "Overwatch-Regular";
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    height: 100vh;
+    background-image: linear-gradient(to left top, #96fbc4 0%, #f9f586 100%);
+}
+
+.button {
+    margin-top: -7em;
+    margin-right: 5%;
+    align-self: flex-end;
+    height: 5em;
+    width: 5em;
+    background: #fff;
+    border-radius: 50%;
+}
