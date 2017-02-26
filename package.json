@@ -1,0 +1,33 @@
+{
+  "name": "dropin-monitor",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sksullivan/drop-in-perfmon.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sksullivan/drop-in-perfmon/issues"
+  },
+  "homepage": "https://github.com/sksullivan/drop-in-perfmon#readme",
+  "dependencies": {
+    "d3": "^4.6.0",
+    "jquery": "^3.1.1"
+  },
+  "devDependencies": {
+    "babel-core": "^6.23.1",
+    "babel-loader": "^6.3.2",
+    "babel-preset-es2015": "^6.22.0",
+    "css-loader": "^0.26.2",
+    "file-loader": "^0.10.1",
+    "style-loader": "^0.13.2",
+    "url-loader": "^0.5.8",
+    "webpack": "^2.2.1"
+  }
+}
