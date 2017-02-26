@@ -6,13 +6,13 @@ import Data from './data.js'
 const App = {}
 
 const HOST = "host"
-const ALLOWED_FIELDS = ['pid','user','task','mem%','cpu%']
+const ALLOWED_FIELDS = Data.ALLOWED_FIELDS
 const HIGHLIGHT_KEY = 'mem%'
 
-App.drawChart = (id,history) => {
+App.drawChart = (id,history,statName) => {
 	d3.select(id).select('svg').remove()
 
-	const data = history.map(stats => Data.sumStat(stats,'cpu%'))
+	const data = history.map(stats => Data.sumStat(stats,statName))
 
 	const m = [20, 20, 20, 20]; // margins
 	const w = $(id).width() - m[1] - m[3]; // width
@@ -73,10 +73,15 @@ App.setPageTitle = stats => {
 	document.title = HOST+" C:"+Data.sumStat(stats,'cpu%').toFixed(0)+"% M:"+Data.sumStat(stats,'mem%').toFixed(0)+"%"
 }
 
+App.setupTitles = _ => $('.graph-opts').html(ALLOWED_FIELDS.join(' / '))
+
 setInterval(_ => {
-	Data.load(stats => {
+	console.log(ALLOWED_FIELDS);
+  App.setupTitles()
+  Data.load(stats => {
 		App.drawTable(stats)
-		App.drawChart('#cpu-graph',Data.history)
+		App.drawChart('#cpu-graph',Data.history,'cpu%')
+		App.drawChart('#mem-graph',Data.history,'mem%')
 		App.setPageTitle(stats)
 	})
 },1000)

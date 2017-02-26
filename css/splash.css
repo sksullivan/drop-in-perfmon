@@ -12,12 +12,36 @@
 
 .chart {
     width: 100%;
-    height: 355px;
+    height: 290px;
+    margin-bottom: 25px;
 }
 
-h1,h3 {
+h1,h3,h6 {
     font-family: "Overwatch-Italic";
     color: #D8D9DA;
+}
+body h3,h4 {
+  margin-top: 0px;
+  display: inline;
+}
+span {
+  margin-bottom: 15px;
+  display: block;
+}
+h4 {
+  margin-left: 30px;
+  font-family: "Overwatch-Regular";
+}
+h4 b {
+  color: #E44C3C;
+}
+
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  display: none;
 }
 
 path {
@@ -52,8 +76,8 @@ table,.chart {
     display: block;
 }
 table {
-  height: 80%;
-  overflow-y: hidden;
+  height: 642px;
+  overflow-y: scroll;
 }
 td {
   padding-right: 15px;
