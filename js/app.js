@@ -1,6 +1,10 @@
 'use strict';
 
 const d3 = require('d3')
+const $ = require('jquery')
+window.jQuery = $
+window.$ = $
+
 import Data from './data.js'
 
 const App = {}
@@ -8,6 +12,11 @@ const App = {}
 const HOST = "host"
 const ALLOWED_FIELDS = Data.ALLOWED_FIELDS
 const HIGHLIGHT_KEY = 'mem%'
+const GRAPH_FIELDS = {
+  '#top-graph': 'cpu%',
+  '#bottom-graph': 'mem%',
+}
+const GRAPH_IDS = $('.chart').map((i,node) => '#'+$(node).attr('id'))
 
 App.drawChart = (id,history,statName) => {
 	d3.select(id).select('svg').remove()
@@ -73,15 +82,21 @@ App.setPageTitle = stats => {
 	document.title = HOST+" C:"+Data.sumStat(stats,'cpu%').toFixed(0)+"% M:"+Data.sumStat(stats,'mem%').toFixed(0)+"%"
 }
 
-App.setupTitles = _ => $('.graph-opts').html(ALLOWED_FIELDS.join(' / '))
+App.setupTitles = _ => {
+  $.each($('span h3'),(i,node) => $(node).html(GRAPH_FIELDS['#'+$(node).closest('div').find('.chart').attr('id')]))
+  $('.graph-opts').html('<span>'+ALLOWED_FIELDS.join('</span> / <span>')+'</span>')
+  $('.graph-opts span').click(e => {
+    GRAPH_FIELDS['#'+$(e.target).closest('div').find('.chart').attr('id')] = e.target.textContent
+    App.setupTitles()
+  })
+}
 
+
+App.setupTitles()
 setInterval(_ => {
-	console.log(ALLOWED_FIELDS);
-  App.setupTitles()
   Data.load(stats => {
 		App.drawTable(stats)
-		App.drawChart('#cpu-graph',Data.history,'cpu%')
-		App.drawChart('#mem-graph',Data.history,'mem%')
+		GRAPH_IDS.map((i,id) => App.drawChart(id,Data.history,GRAPH_FIELDS[id]))
 		App.setPageTitle(stats)
 	})
 },1000)

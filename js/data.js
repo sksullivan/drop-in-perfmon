@@ -1,3 +1,7 @@
+'use strict';
+
+const $ = require('jquery')
+
 const Data = {}
 
 const ALLOWED_FIELDS = ['pid','user','task','mem%','cpu%']
