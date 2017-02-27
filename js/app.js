@@ -9,7 +9,14 @@ import Data from './data.js'
 
 const App = {}
 
-const HOST = "host"
+var HOST_NAME = "rstudio"
+const HOSTS = {
+  'violet': '141.142.209.140',
+  'netshare': '141.142.209.255',
+  'iforge-proto': '141.142.209.141',
+  'rstudio':'141.142.210.5',
+}
+var HOST = HOSTS[HOST_NAME]
 const TABLE_ALLOWED_FIELDS = Data.TABLE_ALLOWED_FIELDS
 const GRAPH_ALLOWED_FIELDS = ['cpu%','mem%']
 const HIGHLIGHT_KEY = 'mem%'
@@ -88,7 +95,7 @@ App.drawTable = stats => {
 }
 
 App.setPageTitle = stats => {
-	document.title = HOST+" C:"+Data.sumStat(stats,'cpu%').toFixed(0)+"% M:"+Data.sumStat(stats,'mem%').toFixed(0)+"%"
+	document.title = HOST_NAME+" C:"+Data.sumStat(stats,'cpu%').toFixed(0)+"% M:"+Data.sumStat(stats,'mem%').toFixed(0)+"%"
 }
 
 App.setupTitles = _ => {
@@ -98,10 +105,19 @@ App.setupTitles = _ => {
     GRAPH_FIELDS['#'+$(e.target).closest('div').find('.chart').attr('id')] = e.target.textContent
     App.setupTitles()
   })
+  $('.host-opts').html('<span>'+Object.keys(HOSTS).join('</span> / <span>')+'</span>')
+  $('h1').html("PERF: "+HOST_NAME+" ( "+HOST+" )")
+  $('.host-opts span').click(e => {
+    HOST_NAME = e.target.textContent
+    HOST = HOSTS[e.target.textContent]
+    Data.setHost(HOST)
+    App.setupTitles()
+  })
 }
 
 
 App.setupTitles()
+Data.setHost(HOST)
 setInterval(_ => {
   Data.load(stats => {
 		App.drawTable(stats)
