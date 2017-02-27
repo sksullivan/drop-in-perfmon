@@ -10,13 +10,22 @@ import Data from './data.js'
 const App = {}
 
 const HOST = "host"
-const ALLOWED_FIELDS = Data.ALLOWED_FIELDS
+const TABLE_ALLOWED_FIELDS = Data.TABLE_ALLOWED_FIELDS
+const GRAPH_ALLOWED_FIELDS = ['cpu%','mem%']
 const HIGHLIGHT_KEY = 'mem%'
 const GRAPH_FIELDS = {
   '#top-graph': 'cpu%',
   '#bottom-graph': 'mem%',
 }
 const GRAPH_IDS = $('.chart').map((i,node) => '#'+$(node).attr('id'))
+const STAT_DOMAINS = {
+  'mem%': [0,100],
+  'cpu%': [0,400],
+}
+const GRAPH_INTERPOLATION_METHODS = {
+  '#top-graph': d3.curveLinear,
+  '#bottom-graph': d3.curveStep,
+}
 
 App.drawChart = (id,history,statName) => {
 	d3.select(id).select('svg').remove()
@@ -28,7 +37,7 @@ App.drawChart = (id,history,statName) => {
 	const h = $(id).height() - m[0] - m[2]; // height
 
 	const x = d3.scaleLinear().domain([0,history.length]).range([0,w])
-	const y = d3.scaleLinear().domain([0,100]).range([h,0])
+	const y = d3.scaleLinear().domain(STAT_DOMAINS[statName]).range([h,0])
 
 	const graph = d3.select(id)
     .append('svg:svg')
@@ -54,7 +63,7 @@ App.drawChart = (id,history,statName) => {
 		.call(yAxisLeft);
 	
 	const line = d3.line()
-		.curve(d3.curveStep)
+		.curve(GRAPH_INTERPOLATION_METHODS[id])
 		.x((d,i) => x(i))
 		.y((d,i) => y(d))
   
@@ -65,7 +74,7 @@ App.drawChart = (id,history,statName) => {
 App.drawTable = stats => {
 	d3.select('#info-table').select('table').remove()
 
-	const columnNames = Object.keys(stats[0]).filter(field => ALLOWED_FIELDS.indexOf(field) != -1)
+	const columnNames = Object.keys(stats[0]).filter(field => TABLE_ALLOWED_FIELDS.indexOf(field) != -1)
 	const table = d3.select('#info-table').append('table')
 	const thead = table.append('thead').append('tr')
 		.selectAll('th')
@@ -75,7 +84,7 @@ App.drawTable = stats => {
         .range(['#D8D9DA', '#E44C3C']);
 	const tbody = table.append('tbody')
 		.selectAll('tr').data(stats).enter().append('tr').style('color',d => processColor(d[HIGHLIGHT_KEY]))
-		.selectAll('td').data(processData => Object.keys(processData).filter(field => ALLOWED_FIELDS.indexOf(field) != -1).map(field => processData[field])).enter().append('td').text(d => d)
+		.selectAll('td').data(processData => Object.keys(processData).filter(field => TABLE_ALLOWED_FIELDS.indexOf(field) != -1).map(field => processData[field])).enter().append('td').text(d => d)
 }
 
 App.setPageTitle = stats => {
@@ -84,7 +93,7 @@ App.setPageTitle = stats => {
 
 App.setupTitles = _ => {
   $.each($('span h3'),(i,node) => $(node).html(GRAPH_FIELDS['#'+$(node).closest('div').find('.chart').attr('id')]))
-  $('.graph-opts').html('<span>'+ALLOWED_FIELDS.join('</span> / <span>')+'</span>')
+  $('.graph-opts').html('<span>'+GRAPH_ALLOWED_FIELDS.join('</span> / <span>')+'</span>')
   $('.graph-opts span').click(e => {
     GRAPH_FIELDS['#'+$(e.target).closest('div').find('.chart').attr('id')] = e.target.textContent
     App.setupTitles()

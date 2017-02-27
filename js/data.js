@@ -4,13 +4,13 @@ const $ = require('jquery')
 
 const Data = {}
 
-const ALLOWED_FIELDS = ['pid','user','task','mem%','cpu%']
+const TABLE_ALLOWED_FIELDS = ['pid','user','task','mem%','cpu%']
 const MAX_HISTORY_LENGTH = 300
 
-Data.ALLOWED_FIELDS = ALLOWED_FIELDS
+Data.TABLE_ALLOWED_FIELDS = TABLE_ALLOWED_FIELDS
 
 Data.history = Array(MAX_HISTORY_LENGTH).fill(
-    [ALLOWED_FIELDS
+    [TABLE_ALLOWED_FIELDS
       .map(field => {
         const partialFieldsObject = {}
         partialFieldsObject[field] = 0.0
