@@ -11,7 +11,7 @@ const MAX_HISTORY_LENGTH = 300
 
 Data.TABLE_ALLOWED_FIELDS = TABLE_ALLOWED_FIELDS
 
-Data.history = Array(MAX_HISTORY_LENGTH).fill(
+Data.reset = _ => Data.history = Array(MAX_HISTORY_LENGTH).fill(
     [TABLE_ALLOWED_FIELDS
       .map(field => {
         const partialFieldsObject = {}

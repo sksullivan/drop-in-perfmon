@@ -34,7 +34,6 @@ const GRAPH_INTERPOLATION_METHODS = {
   '#bottom-graph': d3.curveStep,
 }
 
-App.loading = false
 
 App.drawChart = (id,history,statName) => {
 	d3.select(id).select('svg').remove()
@@ -110,6 +109,7 @@ App.setupTitles = _ => {
   $('.host-opts').html('<span>'+Object.keys(HOSTS).join('</span> / <span>')+'</span>')
   $('.host-opts span').click(e => {
     App.enterLoading()
+    Data.reset()
     HOST_NAME = e.target.textContent
     HOST = HOSTS[e.target.textContent]
     Data.setHost(HOST)
@@ -118,9 +118,6 @@ App.setupTitles = _ => {
 }
 
 App.enterLoading = _ => {
-  if (App.loading) {
-    return
-  }
   $('table ').html('<tr class="fa"><td><i class="fa fa-cog fa-spin fa-3x fa-fw"></i></td></tr>')
   $('.chart').html('<i class="fa fa-cog fa-spin fa-3x fa-fw"></i>')
   $('.fa').show()
@@ -129,13 +126,12 @@ App.enterLoading = _ => {
 
 
 App.exitLoading = success => {
-  if (!App.loading) {
-    return
-  }
   if (success) {
-    $('.fa').hide()
-    $('.chart').show()
+    $('.fa').remove()
   } else {
+    $('table ').html('<tr class="fa"><td><i class="fa fa-cog fa-spin fa-3x fa-fw"></i></td></tr>')
+    $('.chart').html('<i class="fa fa-cog fa-spin fa-3x fa-fw"></i>')
+
     $('.fa-cog').addClass('fa-times')
     $('.fa-cog').removeClass('fa-cog')
     $('.fa-spin').removeClass('fa-spin')
