@@ -1,6 +1,7 @@
 var path = require('path');
 var webpack = require('webpack');
- 
+var ExtractTextPlugin = require('extract-text-webpack-plugin'); 
+
 module.exports = {
   entry: './main.js',
   output: { path: __dirname+'/dist', filename: 'bundle.js' },
@@ -16,7 +17,7 @@ module.exports = {
       },
       { 
         test: /\.css$/, 
-        loader: "style-loader!css-loader" 
+        loader: ExtractTextPlugin.extract({ fallback: "style-loader", use: "css-loader" })
       },
       { 
         test: /\.(jpg|png)$/, 
@@ -41,9 +42,6 @@ module.exports = {
     ]
   },
   plugins: [
-    new webpack.ProvidePlugin({
-//      d3: 'd3',
-//      $: 'jquery'
-    })
+    new ExtractTextPlugin("[name].css")
   ],
 };

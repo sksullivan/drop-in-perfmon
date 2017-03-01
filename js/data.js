@@ -4,6 +4,7 @@ const $ = require('jquery')
 
 const Data = {}
 
+Data.HOST_UP = false
 Data.HOST = '141.142.210.5'
 const TABLE_ALLOWED_FIELDS = ['pid','user','task','mem%','cpu%']
 const MAX_HISTORY_LENGTH = 300
@@ -36,12 +37,18 @@ Data.sumStat = (stats,statName) => {
 
 Data.setHost = host => { Data.HOST = host }
 
-Data.load = function (cb) {
- 	$.get('http://'+Data.HOST+'/api/stats?'+$.param({sort: 'cpu%,mem%'})).done(function (statsString) {
-		const stats = JSON.parse(statsString)
+Data.load = function (successCallback,failureCallback) {
+  $.ajax({
+    url: 'http://'+Data.HOST+':5000/api/stats?'+$.param({sort: 'cpu%,mem%'}),
+  }).done(function (statsString) {
+    const stats = JSON.parse(statsString)
     Data.addState(stats)
-    cb(Data.history[Data.history.length-1])
-	})
+    Data.HOST_UP = true;
+    successCallback(Data.history[Data.history.length-1])
+  }).fail(function (jqxhr,text,e) {
+    Data.HOST_UP = false
+    failureCallback()
+  })
 }
 
 export default Data

@@ -112,6 +112,9 @@ tr:nth-child(even) {
   background-color: #292929;
   width: 100%
 }
+.red {
+  color: #E44C3C;
+}
 body {
     margin: 0;
     padding: 0;

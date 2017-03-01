@@ -34,6 +34,8 @@ const GRAPH_INTERPOLATION_METHODS = {
   '#bottom-graph': d3.curveStep,
 }
 
+App.loading = false
+
 App.drawChart = (id,history,statName) => {
 	d3.select(id).select('svg').remove()
 
@@ -106,8 +108,8 @@ App.setupTitles = _ => {
     App.setupTitles()
   })
   $('.host-opts').html('<span>'+Object.keys(HOSTS).join('</span> / <span>')+'</span>')
-  $('h1').html("PERF: "+HOST_NAME+" ( "+HOST+" )")
   $('.host-opts span').click(e => {
+    App.enterLoading()
     HOST_NAME = e.target.textContent
     HOST = HOSTS[e.target.textContent]
     Data.setHost(HOST)
@@ -115,15 +117,47 @@ App.setupTitles = _ => {
   })
 }
 
+App.enterLoading = _ => {
+  if (App.loading) {
+    return
+  }
+  $('table ').html('<tr class="fa"><td><i class="fa fa-cog fa-spin fa-3x fa-fw"></i></td></tr>')
+  $('.chart').html('<i class="fa fa-cog fa-spin fa-3x fa-fw"></i>')
+  $('.fa').show()
+  App.loading = true
+}
+
+
+App.exitLoading = success => {
+  if (!App.loading) {
+    return
+  }
+  if (success) {
+    $('.fa').hide()
+    $('.chart').show()
+  } else {
+    $('.fa-cog').addClass('fa-times')
+    $('.fa-cog').removeClass('fa-cog')
+    $('.fa-spin').removeClass('fa-spin')
+    $('.fa-times').addClass('red')
+  }
+  App.loading = false
+}
 
 App.setupTitles()
+App.enterLoading()
 Data.setHost(HOST)
 setInterval(_ => {
   Data.load(stats => {
-		App.drawTable(stats)
+    App.exitLoading(true)
+    App.drawTable(stats)
+  	$('h1').html("PERF: "+HOST_NAME+" ( "+HOST+" )")
 		GRAPH_IDS.map((i,id) => App.drawChart(id,Data.history,GRAPH_FIELDS[id]))
 		App.setPageTitle(stats)
-	})
+	},_ => {
+    App.exitLoading(false)
+    $('h1').html('PERF: '+HOST_NAME+' ( <b class="red">OFFLINE</b> )')
+  })
 },1000)
 
 export { App }
